@@ -1,24 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
 import './App.css';
+import Chart from './components/Chart';
 
 function App() {
+
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<any>("");
+
+  useEffect((): void => {
+    const getData = async () => {
+      try {
+        const response = await fetch(
+          `https://docs.openaq.org/v2/measurements?country=DE&date_from=2022-05-05T13:40:00&date_to=2022-05-05T13:52:00&order_by=location&limit=10000`
+        );
+        if (!response.ok) {
+          throw new Error(
+            `This is an HTTP error: The status is ${response.status}`
+          );
+        }
+        let actualData = await response.json();
+        setData(actualData);
+        setError(null);
+      } catch (err: any) {
+        setError(err.message);
+        setData(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getData();
+  }, []);
+
+  console.log(data)
+
   return (
+  
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    {loading && <div>Loading...</div>}
+    {error && <div>{`Error fetching the data - ${error}`}</div>}
+
+    {data && <Chart dataAPI={data} /> }
+      
+      
     </div>
   );
 }
