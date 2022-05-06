@@ -12,7 +12,7 @@ const Chart:React.FC<Props> = ({dataAPI}) => {
 
 
 
-    //Filter After Air Pollution Parameter
+    //Make New Collection for Arrays, one Array for Each Parameter
     newData = parameter.map(para => 
         dataAPI.results.filter((measure: { parameter: any; }) => measure.parameter === para)
         )
@@ -35,9 +35,6 @@ let country = newData[0].map((a: { location: any; }) => a.location)
 
    let count:any = uniqueId.map(unique => newData[0].reduce((acc:any, cur:any) => cur.location === unique ? ++acc : acc, 0))
    console.log("count how often we see the names", count)
-    
-  let mount:any = uniqueId.map(unique => dataAPI.results.reduce((acc:any, cur:any) => cur.location === unique ? ++acc : acc, 0));
-        console.log("count the mount ole", mount)
         
 
 // Use Reduce to Merge the same IDs and Sum the Values of all Air Pollution Parameters in an Array
@@ -49,6 +46,9 @@ acc.set(cur.location, (acc.get(cur.location) || 0) + Number(cur.value)), new Map
 })
 
 console.log("Amen before",amen)
+
+// Make the Calculation! We iterate through all of the 5 Perimeters seperately and make the calculation
+// We then iterate through the Map and take the Sum Value and divide it through the Number of Entries we had before (Count)
 
 amen.map((mapset:any) => 
 { let index:any = 0
@@ -65,25 +65,6 @@ amen.map((mapset:any) =>
 
 
 console.log("Amen after",amen)
-
-
-// TO DO 
-
-// uniqueId ist falschrum, wie sieht es mit amen aus?
-// es fehlt bei count und amen noch die aufteilung in die einzelnen parameter VOR der Rechnung
-
-
-
-
-
-
-
-
-// let chars = ['A', 'B', 'A', 'C', 'B'];
-// let uniqueChars = [...new Set(chars)];
-
-// console.log(uniqueChars);
-
 
 
     // END OF DIFFERENT
@@ -120,10 +101,11 @@ console.log("value", value)
 console.log("newData[0]", newData[0])
 console.log("country", country)
 
+
 var trace1 = {
   type: 'scatter',
-  x: mapOut[0],
-  y: country,
+  x: [...amen[0].values() ],
+  y: [...amen[0].keys() ],
   mode: 'markers',
   name: 'um010',
   marker: {
@@ -138,8 +120,8 @@ var trace1 = {
 };
 
 var trace2 = {
-  x: mapOut[1],
-  y: country,
+  x: [...amen[1].values() ],
+  y: [...amen[1].keys() ],
   mode: 'markers',
   name: 'um025',
   marker: {
@@ -154,8 +136,8 @@ var trace2 = {
 };
 
 var trace3 = {
-    x: mapOut[2],
-    y: country,
+    x: [...amen[2].values()],
+    y: [...amen[2].keys()],
     mode: 'markers',
     name: 'um100',
     marker: {
@@ -170,8 +152,8 @@ var trace3 = {
   };
 
   var trace4 = {
-    x: mapOut[3],
-    y: country,
+    x: [...amen[3].values() ],
+    y: [...amen[3].keys() ],
     mode: 'markers',
     name: 'pm1',
     marker: {
@@ -186,8 +168,8 @@ var trace3 = {
   };
 
   var trace5 = {
-    x: mapOut[4],
-    y: country,
+    x: [...amen[4].values() ],
+    y: [...amen[4].keys() ],
     mode: 'markers',
     name: 'pm10',
     marker: {
@@ -201,9 +183,10 @@ var trace3 = {
     }
   };
 
+  
   var trace6 = {
-    x: mapOut[5],
-    y: country,
+    x: [...amen[5].values() ],
+    y: [...amen[5].keys() ],
     mode: 'markers',
     name: 'pm25',
     marker: {
@@ -260,8 +243,6 @@ var layout:any = {
   hovermode: 'closest'
 };
 
-  console.log(data)
-
   return (
 
       <Plot 
@@ -273,7 +254,5 @@ var layout:any = {
 }
 
 export default Chart;
-function newSet(exctractId: any) {
-    throw new Error('Function not implemented.');
-}
+
 
