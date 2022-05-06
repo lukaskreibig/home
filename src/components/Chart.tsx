@@ -1,5 +1,4 @@
 import Plot from 'react-plotly.js';
-import { idText } from 'typescript';
 
 type Props = {
     dataAPI:any
@@ -32,23 +31,40 @@ let country = newData[0].map((a: { location: any; }) => a.location)
     let uniqueId = Array.from(new Set(exctractId))
     console.log("uniqueId", uniqueId)
 
-    // Counting how often we see the names!
+    // Counting how often we see the names! One Array is enough, because the Count is for each Parameter the same
 
-    let count = uniqueId.map(unique => dataAPI.results.reduce((acc:any, cur:any) => cur.location === unique ? ++acc : acc, 0));
-        console.log("count how often we see the names", count)
+   let count:any = uniqueId.map(unique => newData[0].reduce((acc:any, cur:any) => cur.location === unique ? ++acc : acc, 0))
+   console.log("count how often we see the names", count)
+    
+  let mount:any = uniqueId.map(unique => dataAPI.results.reduce((acc:any, cur:any) => cur.location === unique ? ++acc : acc, 0));
+        console.log("count the mount ole", mount)
         
 
 // Use Reduce to Merge the same IDs and Sum the Values of all Air Pollution Parameters in an Array
-
-let amen = newData.map( data => 
+let amen:any = 0
+amen = newData.map( data => 
 {
 return data.reduce((acc: any, cur: any) =>
 acc.set(cur.location, (acc.get(cur.location) || 0) + Number(cur.value)), new Map())
 })
 
-amen.map(la => la)
+console.log("Amen before",amen)
 
-console.log("Amen",amen)
+amen.map((mapset:any) => 
+{ let index:any = 0
+  return mapset.forEach( (value:any, key:any) => {
+    mapset.set(key, value / count[index])
+    console.log("key",key)
+    console.log("value",value)
+    console.log("count", count[index])
+    console.log("index", index)
+    console.log("value divided count[index]", value / count[index])
+    index++
+  }
+)})
+
+
+console.log("Amen after",amen)
 
 
 // TO DO 
