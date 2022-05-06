@@ -22,32 +22,39 @@ const Chart:React.FC<Props> = ({dataAPI}) => {
 
 
 //Exctracting the City Names
-var country = newData[0].map((a: { location: any; }) => a.location)
+let country = newData[0].map((a: { location: any; }) => a.location)
 
     // THIS IS DIFFERENT
 
     // Exctract and Delete Duplicate IDs from API Data
 
    let exctractId = dataAPI.results.map((a: { location: any; }) => a.location )
-    let uniqueId = Array.from(new Set(exctractId)) 
+    let uniqueId = Array.from(new Set(exctractId))
     console.log("uniqueId", uniqueId)
 
     // Counting how often we see the names!
 
     let count = uniqueId.map(unique => dataAPI.results.reduce((acc:any, cur:any) => cur.location === unique ? ++acc : acc, 0));
-        console.log(count)
+        console.log("count how often we see the names", count)
         
 
-// Use Reduce to Merge the same IDs and Sum the Values
-let amen = dataAPI.results.reduce((acc: any, cur: any) =>
-acc.set(cur.locationId, (acc.get(cur.locationId) || 0) + Number(cur.value)), new Map());
+// Use Reduce to Merge the same IDs and Sum the Values of all Air Pollution Parameters in an Array
+
+let amen = newData.map( data => 
+{
+return data.reduce((acc: any, cur: any) =>
+acc.set(cur.location, (acc.get(cur.location) || 0) + Number(cur.value)), new Map())
+})
+
+amen.map(la => la)
+
+console.log("Amen",amen)
+
 
 // TO DO 
 
 // uniqueId ist falschrum, wie sieht es mit amen aus?
 // es fehlt bei count und amen noch die aufteilung in die einzelnen parameter VOR der Rechnung
-
-console.log("Amen",amen)
 
 
 
