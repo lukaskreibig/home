@@ -1,6 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import ChartList from './components/ChartList';
+import Dropdown from './components/Dropdown';
+import { SelectChangeEvent } from '@mui/material';
+import Box from '@mui/material/Box';
+import LinearProgress from '@mui/material/LinearProgress';
 
 function App() {
 
@@ -8,11 +12,14 @@ function App() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<any>("");
 
+  const [dateRange, setDateRange] = useState<number>(3600000);
+
   useEffect((): void => {
     const getData = async () => {
       try {
+        setLoading(true)
         const response = await fetch(
-          `https://docs.openaq.org/v2/measurements?country=DE&date_from=2022-05-05T13:40:00&date_to=2022-05-05T13:52:00&order_by=location&limit=10000`
+          `https://docs.openaq.org/v2/measurements?country=DE&date_from=${new Date(Date.now() - dateRange).toISOString().split('.')[0]}&date_to=${(new Date().toISOString().split('.')[0])}&order_by=location&limit=40000`
         );
         if (!response.ok) {
           throw new Error(
@@ -30,21 +37,33 @@ function App() {
       }
     };
     getData();
-  }, []);
+  }, [dateRange]);
 
   console.log(data)
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setDateRange(event.target.value as any);
+  };
+
+  console.log(dateRange)
+
 
   return (
   
     <div className="App">
-    {loading && <div>Loading...</div>}
     {error && <div>{`Error fetching the data - ${error}`}</div>}
-
+    {<Dropdown handleChange={handleChange} dateRange={dateRange} />}
+    
+    {loading &&     <Box sx={{ width: '100%' }}>
+      <LinearProgress />
+    </Box>}
     {data && <ChartList dataAPI={data} /> }
-      
+    
       
     </div>
   );
 }
 
 export default App;
+
+

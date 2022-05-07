@@ -36,3 +36,37 @@
     transform: rotate(360deg);
   }
 }
+
+.opacity {
+  animation: fadeOut 2s;
+}
+
+@-webkit-keyframes fadeOut {
+  from {
+      opacity: 1;
+  }
+
+  to {
+      opacity: 0.1;
+  }
+}
+
+@-moz-keyframes fadeOut {
+  from {
+      opacity: 1;
+  }
+
+  to {
+      opacity: 0.1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+      opacity: 1;
+  }
+
+  to {
+      opacity: 0.1;
+  }
+}

@@ -1,18 +1,13 @@
+
 import Plot from 'react-plotly.js';
 
 type Props = {
     refineData:any
 }
 
-
 const Chart:React.FC<Props> = ({refineData}) => {
 
     let parameter = ["um010", "um025", "um100", "pm1", "pm10", "pm25"]
-    let newData: any[]
-
-
-    console.log("refineData",refineData)
-
 
 let trace1 = {
   type: 'scatter',
@@ -117,7 +112,7 @@ var data = [trace1, trace2, trace3, trace4, trace5, trace6];
 var layout:any = {
   title: 'Air Pollution Data',
   xaxis: {
-    showgrid: false,
+    showgrid: true,
     showline: true,
     linecolor: 'rgb(102, 102, 102)',
     titlefont: {
@@ -130,13 +125,13 @@ var layout:any = {
         color: 'rgb(102, 102, 102)'
       }
     },
-    autotick: false,
+    autotick: true,
     dtick: 10,
     ticks: 'outside',
     tickcolor: 'rgb(102, 102, 102)'
   },
   margin: {
-    l: 140,
+    l: 280,
     r: 40,
     b: 50,
     t: 80
@@ -148,19 +143,21 @@ var layout:any = {
     yanchor: 'middle',
     xanchor: 'left'
   },
-  width: 600,
-  height: 600,
+  width: 1000,
+  height: 500,
   paper_bgcolor: 'rgb(254, 247, 234)',
   plot_bgcolor: 'rgb(254, 247, 234)',
   hovermode: 'closest'
 };
 
   return (
+<>
 
       <Plot 
       data={data}
       layout={layout}
       />
+      </>
   );
 }
 
