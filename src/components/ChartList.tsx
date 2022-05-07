@@ -1,4 +1,5 @@
 import Chart from './Chart';
+import Chart2 from './Chart2';
 
 type Props = {
     dataAPI:any
@@ -63,7 +64,10 @@ let value = mapOut.map((a: any[]) =>
 
   return (
 
+      <>
       <Chart refineData={refineData} />
+      <Chart2 refineData={value} />
+      </>
     
   );
   }
