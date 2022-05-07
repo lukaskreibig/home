@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import Chart from './components/Chart';
+import ChartList from './components/ChartList';
 
 function App() {
 
@@ -40,7 +40,7 @@ function App() {
     {loading && <div>Loading...</div>}
     {error && <div>{`Error fetching the data - ${error}`}</div>}
 
-    {data && <Chart dataAPI={data} /> }
+    {data && <ChartList dataAPI={data} /> }
       
       
     </div>

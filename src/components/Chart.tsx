@@ -1,111 +1,23 @@
 import Plot from 'react-plotly.js';
 
 type Props = {
-    dataAPI:any
+    refineData:any
 }
 
 
-const Chart:React.FC<Props> = ({dataAPI}) => {
+const Chart:React.FC<Props> = ({refineData}) => {
 
     let parameter = ["um010", "um025", "um100", "pm1", "pm10", "pm25"]
     let newData: any[]
 
 
-
-    //Make New Collection for Arrays, one Array for Each Parameter
-    newData = parameter.map(para => 
-        dataAPI.results.filter((measure: { parameter: any; }) => measure.parameter === para)
-        )
-        console.log("AllAPIDATA", dataAPI)
-        
+    console.log("refineData",refineData)
 
 
-//Exctracting the City Names
-let country = newData[0].map((a: { location: any; }) => a.location)
-
-    // THIS IS DIFFERENT
-
-    // Exctract and Delete Duplicate IDs from API Data
-
-   let exctractId = dataAPI.results.map((a: { location: any; }) => a.location )
-    let uniqueId = Array.from(new Set(exctractId))
-    console.log("uniqueId", uniqueId)
-
-    // Counting how often we see the names! One Array is enough, because the Count is for each Parameter the same
-
-   let count:any = uniqueId.map(unique => newData[0].reduce((acc:any, cur:any) => cur.location === unique ? ++acc : acc, 0))
-   console.log("count how often we see the names", count)
-        
-
-// Use Reduce to Merge the same IDs and Sum the Values of all Air Pollution Parameters in an Array
-let amen:any = 0
-amen = newData.map( data => 
-{
-return data.reduce((acc: any, cur: any) =>
-acc.set(cur.location, (acc.get(cur.location) || 0) + Number(cur.value)), new Map())
-})
-
-console.log("Amen before",amen)
-
-// Make the Calculation! We iterate through all of the 5 Perimeters seperately and make the calculation
-// We then iterate through the Map and take the Sum Value and divide it through the Number of Entries we had before (Count)
-
-amen.map((mapset:any) => 
-{ let index:any = 0
-  return mapset.forEach( (value:any, key:any) => {
-    mapset.set(key, value / count[index])
-    console.log("key",key)
-    console.log("value",value)
-    console.log("count", count[index])
-    console.log("index", index)
-    console.log("value divided count[index]", value / count[index])
-    index++
-  }
-)})
-
-
-console.log("Amen after",amen)
-
-
-    // END OF DIFFERENT
-
-
-
-
-
-
-
-
-//Looking how often the same name is in the array
-let nameCount = country.filter((a: any[]) => newData[0][0].location === a).length
-console.log(nameCount)
-
-
-
-// making new arrays sorted after air pollution parameters
-let mapOut = newData.map((a: any[]) => a.map( b => b.value ))
-console.log("MapOut", mapOut)
-
-
-
-// Deutschlandweiter Durchschnitt
-let value = mapOut.map((a: any[]) => 
-{
-    return (
-            (a.reduce((a: any,b: any) => a + b, 0)) / a.length
-
-)})
-
-console.log("newData", newData)
-console.log("value", value)
-console.log("newData[0]", newData[0])
-console.log("country", country)
-
-
-var trace1 = {
+let trace1 = {
   type: 'scatter',
-  x: [...amen[0].values() ],
-  y: [...amen[0].keys() ],
+  x: [...refineData[0].values() ],
+  y: [...refineData[0].keys() ],
   mode: 'markers',
   name: 'um010',
   marker: {
@@ -119,9 +31,9 @@ var trace1 = {
   }
 };
 
-var trace2 = {
-  x: [...amen[1].values() ],
-  y: [...amen[1].keys() ],
+let trace2 = {
+  x: [...refineData[1].values() ],
+  y: [...refineData[1].keys() ],
   mode: 'markers',
   name: 'um025',
   marker: {
@@ -135,9 +47,9 @@ var trace2 = {
   }
 };
 
-var trace3 = {
-    x: [...amen[2].values()],
-    y: [...amen[2].keys()],
+let trace3 = {
+    x: [...refineData[2].values()],
+    y: [...refineData[2].keys()],
     mode: 'markers',
     name: 'um100',
     marker: {
@@ -152,8 +64,8 @@ var trace3 = {
   };
 
   var trace4 = {
-    x: [...amen[3].values() ],
-    y: [...amen[3].keys() ],
+    x: [...refineData[3].values() ],
+    y: [...refineData[3].keys() ],
     mode: 'markers',
     name: 'pm1',
     marker: {
@@ -168,8 +80,8 @@ var trace3 = {
   };
 
   var trace5 = {
-    x: [...amen[4].values() ],
-    y: [...amen[4].keys() ],
+    x: [...refineData[4].values() ],
+    y: [...refineData[4].keys() ],
     mode: 'markers',
     name: 'pm10',
     marker: {
@@ -185,8 +97,8 @@ var trace3 = {
 
   
   var trace6 = {
-    x: [...amen[5].values() ],
-    y: [...amen[5].keys() ],
+    x: [...refineData[5].values() ],
+    y: [...refineData[5].keys() ],
     mode: 'markers',
     name: 'pm25',
     marker: {
@@ -249,7 +161,6 @@ var layout:any = {
       data={data}
       layout={layout}
       />
-    
   );
 }
 
