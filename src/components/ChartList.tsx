@@ -1,17 +1,29 @@
+import { animated, useSpring } from 'react-spring';
 import Chart from './Chart';
 import Chart2 from './Chart2';
 
 type Props = {
     dataAPI:any
+    chart:number
 }
 
 
-const ChartList:React.FC<Props> = ({dataAPI}) => {
+const ChartList:React.FC<Props> = ({dataAPI, chart}) => {
+
+  const fadeIn = useSpring({
+    from: { y: 0, opacity: 0 },
+    to: { y: 0, opacity: 1 },
+    config: {
+      duration: 500, // duration for the whole animation form start to end
+    },
+  });
 
     let parameter = ["um010", "um025", "um100", "pm1", "pm10", "pm25"]
     let newData: any[]
 
 
+    // Length of The Whole Array (all data measurement points)
+    const dataPoints = dataAPI.results.length
 
     //Make New Collection for Arrays, one Array for Each Parameter
     newData = parameter.map(para => 
@@ -64,10 +76,9 @@ let value = mapOut.map((a: any[]) =>
 
   return (
 
-      <>
-      <Chart refineData={refineData} />
-      <Chart2 refineData={value} />
-      </>
+      <animated.div className="charts" style={fadeIn}>
+        {chart === 1 ? <Chart refineData={refineData} dataPoints={dataPoints} /> : <Chart2 refineData={value} dataPoints={dataPoints} /> }
+      </animated.div>
     
   );
   }

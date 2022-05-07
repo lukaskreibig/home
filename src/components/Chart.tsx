@@ -3,9 +3,10 @@ import Plot from 'react-plotly.js';
 
 type Props = {
     refineData:any
+    dataPoints:number
 }
 
-const Chart:React.FC<Props> = ({refineData}) => {
+const Chart:React.FC<Props> = ({refineData, dataPoints}) => {
 
     let parameter = ["um010", "um025", "um100", "pm1", "pm10", "pm25"]
 
@@ -16,9 +17,9 @@ let trace1 = {
   mode: 'markers',
   name: 'um010',
   marker: {
-    color: 'rgba(156, 165, 196, 0.95)',
+    color: '#e9c46a',
     line: {
-      color: 'rgba(156, 165, 196, 1.0)',
+      color: '#e9c46a',
       width: 1,
     },
     symbol: 'circle',
@@ -32,9 +33,9 @@ let trace2 = {
   mode: 'markers',
   name: 'um025',
   marker: {
-    color: 'rgba(204, 204, 204, 0.95)',
+    color: '#2a9d8f',
     line: {
-      color: 'rgba(217, 217, 217, 1.0)',
+      color: '#2a9d8f',
       width: 1,
     },
     symbol: 'circle',
@@ -42,31 +43,15 @@ let trace2 = {
   }
 };
 
-let trace3 = {
-    x: [...refineData[2].values()],
-    y: [...refineData[2].keys()],
-    mode: 'markers',
-    name: 'um100',
-    marker: {
-      color: 'rgba(17, 22, 204, 0.95)',
-      line: {
-        color: 'rgba(217, 217, 217, 1.0)',
-        width: 1,
-      },
-      symbol: 'circle',
-      size: 16
-    }
-  };
-
   var trace4 = {
     x: [...refineData[3].values() ],
     y: [...refineData[3].keys() ],
     mode: 'markers',
     name: 'pm1',
     marker: {
-      color: 'rgba(90, 90, 90, 0.95)',
+      color: '#f4a261',
       line: {
-        color: 'rgba(217, 217, 217, 1.0)',
+        color: '#f4a261',
         width: 1,
       },
       symbol: 'circle',
@@ -80,9 +65,9 @@ let trace3 = {
     mode: 'markers',
     name: 'pm10',
     marker: {
-      color: 'rgba(111, 24, 124, 0.95)',
+      color: '#e63946',
       line: {
-        color: 'rgba(217, 217, 217, 1.0)',
+        color: '#e63946',
         width: 1,
       },
       symbol: 'circle',
@@ -97,9 +82,9 @@ let trace3 = {
     mode: 'markers',
     name: 'pm25',
     marker: {
-      color: 'rgba(124, 203, 280, 0.95)',
+      color: '#e76f51',
       line: {
-        color: 'rgba(217, 217, 217, 1.0)',
+        color: '#e76f51',
         width: 1,
       },
       symbol: 'circle',
@@ -107,10 +92,12 @@ let trace3 = {
     }
   };
 
-var data = [trace1, trace2, trace3, trace4, trace5, trace6];
+var config = {responsive: true}
+var data = [trace1, trace2, trace4, trace5, trace6];
 
 var layout:any = {
-  title: 'Air Pollution Data',
+  width: 1400, height: 600,
+  title: `Air Pollution Data - Detailed Map of German Stations - Average of ${dataPoints} Measurements in Chosen Time Span`,
   xaxis: {
     showgrid: true,
     showline: true,
@@ -143,10 +130,6 @@ var layout:any = {
     yanchor: 'middle',
     xanchor: 'left'
   },
-  width: 1000,
-  height: 500,
-  paper_bgcolor: 'rgb(254, 247, 234)',
-  plot_bgcolor: 'rgb(254, 247, 234)',
   hovermode: 'closest'
 };
 
@@ -156,6 +139,7 @@ var layout:any = {
       <Plot 
       data={data}
       layout={layout}
+      config={config}
       />
       </>
   );
