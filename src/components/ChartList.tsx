@@ -75,7 +75,8 @@ let value = mapOut.map((a: any[]) =>
 ;
 
   return (
-
+    !dataPoints ? <div className="charts" id="message"> No Data for given time span. Probably there is no up-to-date data from the given country. </div> :
+        
       <animated.div className="charts" style={fadeIn}>
         {chart === 1 ? <Chart refineData={refineData} dataPoints={dataPoints} /> : <Chart2 refineData={value} dataPoints={dataPoints} /> }
       </animated.div>

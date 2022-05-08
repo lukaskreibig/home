@@ -6,14 +6,15 @@ import Select from '@mui/material/Select';
 
 type Props = {
     handleChange:any
-    dateRange:number
+    dateRange:any
     dropdown:string
-}
+    countries?:any
+};
 
-const Dropdown:React.FC<Props> = ({handleChange, dateRange, dropdown}) => {
+const Dropdown:React.FC<Props> = ({handleChange, dateRange, dropdown, countries}) => {
 
   const twoHours = 7200000
-  let dateData = [{input: twoHours, description: "2 Hours"}, {input: (2 * twoHours), description: "4 Hours"}, {input: (6 * twoHours), description: "12 Hours"}]
+  let dateData = [{input: twoHours / 2, description: "Last Hour"}, {input: twoHours, description: "Last Two Hours"}, {input: (2 * twoHours), description: "Last Four Hours"}, {input: (6 * twoHours), description: "Last Twelve Hours"}]
   let chartData = [{input: 1, description: "Detailed Air Pollution"}, {input: 2, description: "Average Air Pollution"} ]
 
   return (
@@ -27,7 +28,7 @@ const Dropdown:React.FC<Props> = ({handleChange, dateRange, dropdown}) => {
           label={dropdown}
           onChange={handleChange}
         >
-          {(dropdown === "Time" ? (dateData) : (chartData)).map(data => <MenuItem value={data.input}>{data.description}</MenuItem>)}
+          {(dropdown === "Time" ? (dateData) : dropdown === "Chart" ? (chartData) : (countries)).map((data:any) => <MenuItem value={!countries ? data.input : data.code} key={data.input}>{!countries ? data.description : data.name}</MenuItem>)}
         </Select>
       </FormControl>
     </Box>

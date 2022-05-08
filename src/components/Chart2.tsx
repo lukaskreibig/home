@@ -10,7 +10,6 @@ const Chart2:React.FC<Props> = ({refineData, dataPoints}) => {
 
     let parameter = ["um010", "um025", "um100", "pm1", "pm10", "pm25"]
 
-    
 
 
             let data:any=[
@@ -19,17 +18,21 @@ const Chart2:React.FC<Props> = ({refineData, dataPoints}) => {
               ]
             
               let layout={
-                width: 1000, height: 600, title: `Air Pollution Data - German Average of ${dataPoints} Measurements from 19 Stations in Chosen Time Span`,
+                width: 1000, height: 600, title: `Air Pollution Data - Average of ${dataPoints} Measurements from all Stations in Chosen Time Span and Country`,
               }
               var config = {responsive: true}
   return (
 <>
 
-      <Plot 
+
+        <Plot 
       data={data}
       layout={layout}
       config={config}
       />
+      
+
+      
       </>
   );
 }

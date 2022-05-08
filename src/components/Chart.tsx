@@ -15,7 +15,7 @@ let trace1 = {
   x: [...refineData[0].values() ],
   y: [...refineData[0].keys() ],
   mode: 'markers',
-  name: 'um010',
+  name: 'UM 0.10 µg/m³',
   marker: {
     color: '#e9c46a',
     line: {
@@ -31,7 +31,7 @@ let trace2 = {
   x: [...refineData[1].values() ],
   y: [...refineData[1].keys() ],
   mode: 'markers',
-  name: 'um025',
+  name: 'UM 0.25 µg/m³',
   marker: {
     color: '#2a9d8f',
     line: {
@@ -47,7 +47,7 @@ let trace2 = {
     x: [...refineData[3].values() ],
     y: [...refineData[3].keys() ],
     mode: 'markers',
-    name: 'pm1',
+    name: 'PM 1 µg/m³',
     marker: {
       color: '#f4a261',
       line: {
@@ -63,7 +63,7 @@ let trace2 = {
     x: [...refineData[4].values() ],
     y: [...refineData[4].keys() ],
     mode: 'markers',
-    name: 'pm10',
+    name: 'PM 10 µg/m³',
     marker: {
       color: '#e63946',
       line: {
@@ -80,7 +80,7 @@ let trace2 = {
     x: [...refineData[5].values() ],
     y: [...refineData[5].keys() ],
     mode: 'markers',
-    name: 'pm25',
+    name: 'PM 2.5 µg/m³',
     marker: {
       color: '#e76f51',
       line: {
@@ -97,7 +97,7 @@ var data = [trace1, trace2, trace4, trace5, trace6];
 
 var layout:any = {
   width: 1400, height: 600,
-  title: `Air Pollution Data - Detailed Map of German Stations - Average of ${dataPoints} Measurements in Chosen Time Span`,
+  title: `Air Pollution Data - Detailed Map - Average of ${dataPoints} Measurements in Chosen Time Span`,
   xaxis: {
     showgrid: true,
     showline: true,
