@@ -1,101 +1,44 @@
 
+import { useState } from 'react';
 import Plot from 'react-plotly.js';
 
 type Props = {
     refineData:any
     dataPoints:number
+    chart: number
 }
 
-const Chart:React.FC<Props> = ({refineData, dataPoints}) => {
+const Chart:React.FC<Props> = ({refineData, dataPoints, chart}) => {
 
-    let parameter = ["um010", "um025", "um100", "pm1", "pm10", "pm25"]
 
-let trace1 = {
-  type: 'scatter',
-  x: [...refineData[0].values() ],
-  y: [...refineData[0].keys() ],
-  mode: 'markers',
-  name: 'UM 0.10 µg/m³',
-  marker: {
-    color: '#e9c46a',
-    line: {
-      color: '#e9c46a',
-      width: 1,
-    },
-    symbol: 'circle',
-    size: 16
-  }
-};
+let parameter = ["UM 0.10 µg/m³", "UM 0.25 µg/m³", "PM 1 µg/m³", "PM 10 µg/m³", "PM 2.5 µg/m³"]
+let color = ["#e9c46a", "#2a9d8f", "#f4a261", "#e63946", "#e76f51"]
 
-let trace2 = {
-  x: [...refineData[1].values() ],
-  y: [...refineData[1].keys() ],
-  mode: 'markers',
-  name: 'UM 0.25 µg/m³',
-  marker: {
-    color: '#2a9d8f',
-    line: {
-      color: '#2a9d8f',
-      width: 1,
-    },
-    symbol: 'circle',
-    size: 16
-  }
-};
 
-  var trace4 = {
-    x: [...refineData[3].values() ],
-    y: [...refineData[3].keys() ],
+let dataSettings = parameter.map((para:string, index:number) =>  {
+  return (
+    {   type: 'scatter',
+    x: chart === 1 ? [...refineData[index].values() ] : null,
+    y: chart === 1 ? [...refineData[index].keys() ] : null,
     mode: 'markers',
-    name: 'PM 1 µg/m³',
+    name: para[index],
     marker: {
-      color: '#f4a261',
+      color: color[index],
       line: {
-        color: '#f4a261',
+        color: color[index],
         width: 1,
       },
       symbol: 'circle',
       size: 16
     }
-  };
+  })
+})
 
-  var trace5 = {
-    x: [...refineData[4].values() ],
-    y: [...refineData[4].keys() ],
-    mode: 'markers',
-    name: 'PM 10 µg/m³',
-    marker: {
-      color: '#e63946',
-      line: {
-        color: '#e63946',
-        width: 1,
-      },
-      symbol: 'circle',
-      size: 16
-    }
-  };
-
-  
-  var trace6 = {
-    x: [...refineData[5].values() ],
-    y: [...refineData[5].keys() ],
-    mode: 'markers',
-    name: 'PM 2.5 µg/m³',
-    marker: {
-      color: '#e76f51',
-      line: {
-        color: '#e76f51',
-        width: 1,
-      },
-      symbol: 'circle',
-      size: 16
-    }
-  };
-
+var data:any = (chart === 1 ? dataSettings : [{type: 'bar', x: parameter, y: refineData, marker: {color: "#f4a261"}}]);
 var config = {responsive: true}
-var data = [trace1, trace2, trace4, trace5, trace6];
 
-var layout:any = {
+
+var layout:any = (chart === 1 ? ({
   width: 1400, height: 600,
   title: `Air Pollution Data - Detailed Map - Average of ${dataPoints} Measurements in Chosen Time Span`,
   xaxis: {
@@ -131,7 +74,8 @@ var layout:any = {
     xanchor: 'left'
   },
   hovermode: 'closest'
-};
+}) : ({width: 1000, height: 600, title: `Air Pollution Data - Average of ${dataPoints} Measurements from all Stations in Chosen Time Span and Country`,}))
+
 
   return (
 <>

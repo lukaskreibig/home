@@ -1,6 +1,5 @@
 import { animated, useSpring } from 'react-spring';
 import Chart from './Chart';
-import Chart2 from './Chart2';
 
 type Props = {
     dataAPI:any
@@ -18,7 +17,7 @@ const ChartList:React.FC<Props> = ({dataAPI, chart}) => {
     },
   });
 
-    let parameter = ["um010", "um025", "um100", "pm1", "pm10", "pm25"]
+    let parameter = ["um010", "um025", "pm1", "pm10", "pm25"]
     let newData: any[]
 
 
@@ -72,13 +71,16 @@ let value = mapOut.map((a: any[]) =>
 
 )})
 
+
+console.log("value",value)
+
 ;
 
   return (
     !dataPoints ? <div className="charts" id="message"> No Data for given time span. Probably there is no up-to-date data from the given country. </div> :
         
       <animated.div className="charts" style={fadeIn}>
-        {chart === 1 ? <Chart refineData={refineData} dataPoints={dataPoints} /> : <Chart2 refineData={value} dataPoints={dataPoints} /> }
+        {<Chart refineData={chart === 1 ? refineData : value} dataPoints={dataPoints} chart={chart} />}
       </animated.div>
     
   );

@@ -4,7 +4,6 @@ import ChartList from './components/ChartList';
 import Dropdown from './components/Dropdown';
 import { SelectChangeEvent, LinearProgress } from '@mui/material';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 
@@ -22,26 +21,12 @@ function App() {
   const [open, setOpen] = useState(true);
   const handleClose = () => setOpen(false);
 
-
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
-
-
   useEffect((): void => {
     const getData = async () => {
       try {
         setLoading(true)
         const [airquality, countries] = await Promise.all([
-        fetch(`https://docs.openaq.org/v2/measurements?country=${country}&date_from=${new Date(Date.now() - dateRange).toISOString().split('.')[0]}&date_to=${(new Date().toISOString().split('.')[0])}&order_by=location&limit=40000`),
+        fetch(`https://docs.openaq.org/v2/measurements?parameter=pm10&parameter=pm25&parameter=um010&parameter=pm1&parameter=um025&country=${country}&date_from=${new Date(Date.now() - dateRange).toISOString().split('.')[0]}&date_to=${(new Date().toISOString().split('.')[0])}&order_by=location&limit=40000`),
         fetch(`https://docs.openaq.org/v2/countries`)
       ]);
         if (!airquality.ok && countries) {
@@ -65,23 +50,20 @@ const style = {
     getData();
   }, [dateRange, country]);
 
-  console.log(data)
-  console.log(new Date().toISOString())
-  console.log(new Date().toUTCString())
+  console.log("fetchdata", data)
+  // console.log(new Date().toISOString())
+  // console.log(new Date().toUTCString())
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setDateRange(event.target.value as any);
+
+  const handleSelect = (event: SelectChangeEvent) => {
+    console.log("e",event)
+    if (event.target.name === "Country") 
+    {setCountry(event.target.value as any)}
+    else if (event.target.name === "Chart") 
+    {setChart(event.target.value as any)}
+    else if (event.target.name === "Time") 
+   {setDateRange(event.target.value as any)}
   };
-
-  const handleChart = (event: SelectChangeEvent) => {
-    setChart(event.target.value as any);
-  };
-
-  const handleCountry = (event: SelectChangeEvent) => {
-    setCountry(event.target.value as any);
-  };
-
-  console.log("countrieslist", countriesList)
 
 
   return (
@@ -106,9 +88,9 @@ const style = {
 
 
     <div className="dropdowncontainer">
-    {<Dropdown handleChange={handleChart} dateRange={chart} dropdown={"Chart"} />}
-    {<Dropdown handleChange={handleChange} dateRange={dateRange} dropdown={"Time"} />}
-    {data && <Dropdown handleChange={handleCountry} dateRange={country} dropdown={"Country"} countries={countriesList} />}
+    {<Dropdown handleSelect={handleSelect} dataValue={chart} dropdown={"Chart"} />}
+    {<Dropdown handleSelect={handleSelect} dataValue={dateRange} dropdown={"Time"} />}
+    {data && <Dropdown handleSelect={handleSelect} dataValue={country} dropdown={"Country"} countries={countriesList} />}
     </div>
     {loading && <Box sx={{ width: '100%' }}> <LinearProgress /> </Box>}
     {error && <div className="charts" id="message">{`Error fetching the data - ${error}`}</div>}
@@ -120,3 +102,15 @@ const style = {
 }
 
 export default App;
+
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
