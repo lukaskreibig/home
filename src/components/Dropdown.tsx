@@ -17,11 +17,10 @@ const Dropdown: React.FC<Props> = ({
   dropdown,
   countries,
 }) => {
-
   let timeData = [
     { input: "day", description: "Today" },
-    { input: 'month', description: "This Month" },
-    { input: 'year', description: "This Year" },
+    { input: "month", description: "This Month" },
+    { input: "year", description: "This Year" },
   ];
 
   let chartData = [
@@ -47,11 +46,8 @@ const Dropdown: React.FC<Props> = ({
             : dropdown === "Chart"
             ? chartData
             : countries
-          ).map((data: any, index:any) => (
-            <MenuItem
-              value={!countries ? data.input : data.code}
-              key={index}
-            >
+          ).map((data: any, index: any) => (
+            <MenuItem value={!countries ? data.input : data.code} key={index}>
               {!countries ? data.description : data.name}
             </MenuItem>
           ))}
