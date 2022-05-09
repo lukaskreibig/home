@@ -1,26 +1,46 @@
+import { useEffect } from "react";
 import Plot from "react-plotly.js";
+import { animated, useSpring } from "react-spring";
 
 type Props = {
   refineData: any;
   dataPoints: number;
   chart: number;
   dataAPI: any;
+  loading: boolean;
 };
-const Chart: React.FC<Props> = ({ refineData, dataPoints, chart, dataAPI }) => {
-
-  console.log("refineData", refineData)
-  console.log("dataAPChart", dataAPI)
-
+const Chart: React.FC<Props> = ({
+  refineData,
+  dataPoints,
+  chart,
+  dataAPI,
+  loading,
+}) => {
   let parameter = [
-    {name: "PM 10 µg/m³", value: "pm10"},
-    {name: "PM 2.5 µg/m³", value: "pm25"},
+    { name: "PM 10 µg/m³", value: "pm10" },
+    { name: "PM 2.5 µg/m³", value: "pm25" },
   ];
   let color = ["#e9c46a", "#2a9d8f", "#f4a261", "#e63946", "#e76f51"];
 
-  let dataSettings = parameter.map((para:any, index: number) => {
+  let dataSettings = parameter.map((para: any, index: number) => {
     return {
       type: "scatter",
-      y: dataAPI.map((data:any) => (data.parameters.filter((pm:any) => pm.parameter === para.value)).map((value:any) => chart === 3 ? value.lastValue : value.average)).flat(1),
+      x: dataAPI.map(
+        (data: any) =>
+          data.name +
+          (data.city
+            ? `, ${data.city}, Latest Update: ${data.lastUpdated.split("T")[0]}`
+            : "")
+      ),
+      y: dataAPI
+        .map((data: any) =>
+          data.parameters
+            .filter((pm: any) => pm.parameter === para.value)
+            .map((value: any) =>
+              chart === 3 ? value.lastValue : value.average
+            )
+        )
+        .flat(1),
       mode: "markers",
       name: para.name,
       marker: {
@@ -38,62 +58,60 @@ const Chart: React.FC<Props> = ({ refineData, dataPoints, chart, dataAPI }) => {
   let barSettings = [
     {
       type: "bar",
-      x: refineData.map((data:any) => data.displayName + " " + data.unit),
-      y: refineData.map((data:any) => data.average),
+      x: refineData.map((data: any) => data.displayName + " " + data.unit),
+      y: refineData.map((data: any) => data.average),
       marker: { color: "#f4a261" },
     },
   ];
 
-  let data: any =
-    chart === 2
-      ? barSettings : dataSettings 
-      
+  let data: any = chart === 2 ? barSettings : dataSettings;
 
   let config = { responsive: true };
 
   let layout: any =
-
-  chart === 2 ? {
-    width: 1000,
-    height: 600,
-    title: `Air Pollution Data - Average of ${refineData.reduce((partialSum: any, a: any ) => partialSum + a.measurement_count, 0)} Measurements from all Stations in Chosen Time Span and Country`,
-  }
-
-  : {
+    chart === 2
+      ? {
           width: 1400,
-          height: 600,
-          title: `Air Pollution - Showing the ${chart  === 1 ? "Average" : "Latest"} Data from ${dataPoints} Stations ${chart  === 1 ? `using ${dataAPI.reduce((partialSum: any, a: any ) => partialSum + a.measurements, 0)} Measurements` : ""}`,
+          height: 550,
+          title: `Air Pollution Data - Average of ${refineData.reduce(
+            (partialSum: any, a: any) => partialSum + a.measurement_count,
+            0
+          )} Measurements from all Stations in Chosen Time Span and Country`,
+          margin: {
+            l: 240,
+            r: 240,
+            b: 100,
+            t: 115,
+          },
+        }
+      : {
+          width: 1400,
+          height: 550,
+          title: `Air Pollution - Showing the ${
+            chart === 1 ? "Average" : "Latest"
+          } Data from ${dataPoints} Stations ${
+            chart === 1
+              ? `using ${dataAPI.reduce(
+                  (partialSum: any, a: any) => partialSum + a.measurements,
+                  0
+                )} Measurements`
+              : ""
+          }`,
           xaxis: {
             showgrid: false,
             showline: false,
-            // linecolor: "rgb(102, 102, 102)",
-            // titlefont: {
-            //   font: {
-            //     color: "rgb(204, 204, 204)",
-            //   },
-            // },
             showticklabels: false,
-            // tickfont: {
-            //   font: {
-            //     color: "rgb(102, 102, 102)",
-            //   },
-            // },
-            // autotick: false,
-            // dtick: 3,
-            // ticks: "inside",
-            // tickcolor: "rgb(102, 102, 102)",
           },
           margin: {
             l: 40,
             r: 10,
-            b: 30,
+            b: 10,
             t: 80,
           },
           legend: {
-            
-              x: 0,
-              y: 1,
-            
+            x: 0,
+            y: 1,
+
             font: {
               size: 15,
             },
@@ -102,11 +120,22 @@ const Chart: React.FC<Props> = ({ refineData, dataPoints, chart, dataAPI }) => {
           },
           hovermode: "closest",
         };
-console.log(chart)
+  console.log(chart);
+
+  const [style, api] = useSpring({ x: 0, y: 50 }, [data]);
+  useEffect(() => {
+    api.start({
+      x: 0,
+      y: 0,
+      delay: 100,
+      config: { mass: 1, tension: 280, friction: 60 },
+    });
+  }, [data, api]);
+
   return (
-    <>
+    <animated.div style={style}>
       <Plot data={data} layout={layout} config={config} />
-    </>
+    </animated.div>
   );
 };
 

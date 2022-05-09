@@ -20,7 +20,7 @@ const App = () => {
 
   const [open, setOpen] = useState<boolean>(true);
   const handleClose = (): void => setOpen(false);
-  console.log(dateRange)
+  console.log(dateRange);
 
   useEffect((): void => {
     const getData = async (): Promise<void> => {
@@ -38,7 +38,9 @@ const App = () => {
             fetch(
               `https://u50g7n0cbj.execute-api.us-east-1.amazonaws.com/v2/locations?parameter=pm10&parameter=pm25&limit=1000&page=1&offset=0&sort=desc&radius=1000&country=${country}&order_by=lastUpdated&dumpRaw=false`
             ),
-            fetch(`https://u50g7n0cbj.execute-api.us-east-1.amazonaws.com/v2/countries`),
+            fetch(
+              `https://u50g7n0cbj.execute-api.us-east-1.amazonaws.com/v2/countries`
+            ),
           ]);
         if (!airqualityFetch.ok || !countriesFetch.ok || !averageFetch.ok) {
           setLoading(false);
@@ -91,7 +93,8 @@ const App = () => {
             Air Pollution Data
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            This is an informal Graph that uses OpenAQ API to get you worldwide Air Pollution Data worldwide. Have fun playing around!
+            This is an informal Graph that uses OpenAQ API to get you worldwide
+            Air Pollution Data worldwide. Have fun playing around!
           </Typography>
         </Box>
       </Modal>
@@ -112,14 +115,13 @@ const App = () => {
             countries={countriesList}
           />
         )}
-        {chart === 2 ?
+        {chart === 2 ? (
           <Dropdown
             handleSelect={handleSelect}
             dataValue={dateRange}
             dropdown={"Time"}
           />
-         : (null)
-        }
+        ) : null}
       </div>
       {loading && (
         <Box sx={{ width: "100%" }}>
@@ -138,10 +140,17 @@ const App = () => {
           Loading Data for the first time. This might take a while!{" "}
         </div>
       )}
-      {data && <ChartList dataAPI={data.results} chart={chart} average={average} />}
+      {data && (
+        <ChartList
+          dataAPI={data.results}
+          chart={chart}
+          average={average}
+          loading={loading}
+        />
+      )}
     </div>
   );
-}
+};
 
 export default App;
 

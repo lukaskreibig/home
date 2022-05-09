@@ -5,10 +5,10 @@ type Props = {
   dataAPI: any;
   chart: number;
   average: any;
+  loading: boolean;
 };
 
-const ChartList: React.FC<Props> = ({ dataAPI, chart, average }) => {
-
+const ChartList: React.FC<Props> = ({ dataAPI, chart, average, loading }) => {
   const fadeIn = useSpring({
     from: { y: 0, opacity: 0 },
     to: { y: 0, opacity: 1 },
@@ -62,9 +62,8 @@ const ChartList: React.FC<Props> = ({ dataAPI, chart, average }) => {
   //   });
   // });
 
-
   // let nationWideAverage = newData.map((a: any[]) => a.map((b) => b.value));
-  
+
   // let nationWideValue = nationWideAverage.map((a: any[]) => {
   //   return a.reduce((a: any, b: any) => a + b, 0) / a.length;
   // });
@@ -74,19 +73,21 @@ const ChartList: React.FC<Props> = ({ dataAPI, chart, average }) => {
   return !average.results.length || !dataPoints ? (
     <div className="charts" id="message">
       {" "}
-      No Data found. Probably there is no up-to-date data from the given country.{" "}
+      No Data found. Probably there is no up-to-date data from the given
+      country.{" "}
     </div>
   ) : (
-    <animated.div className="charts" style={fadeIn}>
+    <div className="charts">
       {
         <Chart
           refineData={average.results}
           dataAPI={dataAPI}
           dataPoints={dataPoints}
           chart={chart}
+          loading={loading}
         />
       }
-    </animated.div>
+    </div>
   );
 };
 

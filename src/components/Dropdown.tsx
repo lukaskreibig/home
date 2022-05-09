@@ -20,7 +20,6 @@ const Dropdown: React.FC<Props> = ({
 
   let timeData = [
     { input: "day", description: "Today" },
-    { input: 'hour', description: "This Hour" },
     { input: 'month', description: "This Month" },
     { input: 'year', description: "This Year" },
   ];
