@@ -17,16 +17,18 @@ const Dropdown: React.FC<Props> = ({
   dropdown,
   countries,
 }) => {
-  const twoHours = 7200000;
-  let dateData = [
-    { input: twoHours / 2, description: "Last Hour" },
-    { input: twoHours, description: "Last Two Hours" },
-    { input: 2 * twoHours, description: "Last Four Hours" },
-    { input: 6 * twoHours, description: "Last Twelve Hours" },
+
+  let timeData = [
+    { input: "day", description: "Today" },
+    { input: 'hour', description: "This Hour" },
+    { input: 'month', description: "This Month" },
+    { input: 'year', description: "This Year" },
   ];
+
   let chartData = [
-    { input: 1, description: "Detailed Air Pollution" },
-    { input: 2, description: "Average Air Pollution" },
+    { input: 1, description: "Detailed Air Pollution Data" },
+    { input: 3, description: "Latest Air Pollution Data" },
+    { input: 2, description: "Average Air Pollution Data" },
   ];
 
   return (
@@ -42,7 +44,7 @@ const Dropdown: React.FC<Props> = ({
           onChange={handleSelect}
         >
           {(dropdown === "Time"
-            ? dateData
+            ? timeData
             : dropdown === "Chart"
             ? chartData
             : countries

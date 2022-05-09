@@ -7,42 +7,49 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 
-
-function App() {
+const App = () => {
   const [data, setData] = useState<data | null>(null);
+  const [average, setAverage] = useState<any>(null);
   const [countriesList, setCountriesList] = useState<countries | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>("");
 
-  const [dateRange, setDateRange] = useState<number>(7200000);
+  const [dateRange, setDateRange] = useState<string>("month");
   const [chart, setChart] = useState<number>(1);
   const [country, setCountry] = useState<string>("DE");
 
   const [open, setOpen] = useState<boolean>(true);
-  const handleClose = ():void => setOpen(false);
+  const handleClose = (): void => setOpen(false);
+  console.log(dateRange)
 
   useEffect((): void => {
-    const getData = async () : Promise<void> => {
+    const getData = async (): Promise<void> => {
       try {
         setLoading(true);
-        const [airquality, countries] = await Promise.all([
-          fetch(
-            `https://docs.openaq.org/v2/measurements?parameter=pm10&parameter=pm25&parameter=um010&parameter=pm1&parameter=um025&country=${country}&date_from=${
-              new Date(Date.now() - dateRange).toISOString().split(".")[0]
-            }&date_to=${
-              new Date().toISOString().split(".")[0]
-            }&order_by=location&limit=40000`
-          ),
-          fetch(`https://docs.openaq.org/v2/countries`),
-        ]);
-        if (!airquality.ok && countries) {
+        const [averageFetch, airqualityFetch, countriesFetch] =
+          await Promise.all([
+            fetch(
+              `https://u50g7n0cbj.execute-api.us-east-1.amazonaws.com/v2/averages?parameter=pm10&parameter=pm25&parameter=um010&parameter=pm1&parameter=um025&country=${country}&date_from=${
+                new Date(Date.now() - 1).toISOString().split(".")[0]
+              }&date_to=${
+                new Date(Date.now()).toISOString().split(".")[0]
+              }&spatial=country&temporal=${dateRange}`
+            ),
+            fetch(
+              `https://u50g7n0cbj.execute-api.us-east-1.amazonaws.com/v2/locations?parameter=pm10&parameter=pm25&limit=1000&page=1&offset=0&sort=desc&radius=1000&country=${country}&order_by=lastUpdated&dumpRaw=false`
+            ),
+            fetch(`https://u50g7n0cbj.execute-api.us-east-1.amazonaws.com/v2/countries`),
+          ]);
+        if (!airqualityFetch.ok || !countriesFetch.ok || !averageFetch.ok) {
           setLoading(false);
           throw new Error(
-            `Oh No!HTTP error: Status ${airquality.status}. Probably too much Data is being loaded. Try a shorter time span.`
+            `Oh No! HTTP error: Status ${averageFetch.status}. Probably too much Data is being loaded. Try a shorter time span.`
           );
         }
-        let airQualityData:data = await airquality.json();
-        let countriesData = await countries.json();
+        let airQualityData: data = await airqualityFetch.json();
+        let averageData = await averageFetch.json();
+        let countriesData = await countriesFetch.json();
+        setAverage(averageData);
         setData(airQualityData);
         setCountriesList(countriesData.results);
         setError(null);
@@ -56,11 +63,12 @@ function App() {
     getData();
   }, [dateRange, country]);
 
+  // console.log(new Date(Date.now() - dateRange).toISOString().split(".")[0]);
+  // console.log(new Date().toISOString().split(".")[0]);
   // console.log(new Date().toISOString())
   // console.log(new Date().toUTCString())
 
   const handleSelect = (event: SelectChangeEvent) => {
-    console.log("e", event);
     if (event.target.name === "Country") {
       setCountry(event.target.value as string);
     } else if (event.target.name === "Chart") {
@@ -80,12 +88,10 @@ function App() {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h5" component="h3">
-            Latest Air Pollution Data
+            Air Pollution Data
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            This is an informal Graph that uses OpenAQ API to get you the latest
-            Air Pollution Data worldwide. You'll always get the average data of
-            a country in the chosen time span.
+            This is an informal Graph that uses OpenAQ API to get you worldwide Air Pollution Data worldwide. Have fun playing around!
           </Typography>
         </Box>
       </Modal>
@@ -98,13 +104,6 @@ function App() {
             dropdown={"Chart"}
           />
         }
-        {
-          <Dropdown
-            handleSelect={handleSelect}
-            dataValue={dateRange}
-            dropdown={"Time"}
-          />
-        }
         {data && (
           <Dropdown
             handleSelect={handleSelect}
@@ -113,6 +112,14 @@ function App() {
             countries={countriesList}
           />
         )}
+        {chart === 2 ?
+          <Dropdown
+            handleSelect={handleSelect}
+            dataValue={dateRange}
+            dropdown={"Time"}
+          />
+         : (null)
+        }
       </div>
       {loading && (
         <Box sx={{ width: "100%" }}>
@@ -131,7 +138,7 @@ function App() {
           Loading Data for the first time. This might take a while!{" "}
         </div>
       )}
-      {data && <ChartList dataAPI={data} chart={chart} />}
+      {data && <ChartList dataAPI={data.results} chart={chart} average={average} />}
     </div>
   );
 }
