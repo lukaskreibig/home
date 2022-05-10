@@ -7,14 +7,12 @@ type Props = {
   dataPoints: number;
   chart: number;
   dataAPI: any;
-  loading: boolean;
 };
 const Chart: React.FC<Props> = ({
   refineData,
   dataPoints,
   chart,
   dataAPI,
-  loading,
 }) => {
   let parameter = [
     { name: "PM 10 µg/m³", value: "pm10" },
@@ -120,7 +118,6 @@ const Chart: React.FC<Props> = ({
           },
           hovermode: "closest",
         };
-  console.log(chart);
 
   const [style, api] = useSpring({ x: 0, y: 50 }, [data]);
   useEffect(() => {
@@ -131,6 +128,7 @@ const Chart: React.FC<Props> = ({
       config: { mass: 1, tension: 280, friction: 60 },
     });
   }, [data, api]);
+  
 
   return (
     <animated.div style={style}>

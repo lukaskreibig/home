@@ -20,7 +20,6 @@ const App = () => {
 
   const [open, setOpen] = useState<boolean>(true);
   const handleClose = (): void => setOpen(false);
-  console.log(dateRange);
 
   useEffect((): void => {
     const getData = async (): Promise<void> => {
@@ -64,11 +63,6 @@ const App = () => {
     };
     getData();
   }, [dateRange, country]);
-
-  // console.log(new Date(Date.now() - dateRange).toISOString().split(".")[0]);
-  // console.log(new Date().toISOString().split(".")[0]);
-  // console.log(new Date().toISOString())
-  // console.log(new Date().toUTCString())
 
   const handleSelect = (event: SelectChangeEvent) => {
     if (event.target.name === "Country") {
@@ -136,8 +130,7 @@ const App = () => {
       )}
       {!data && (
         <div className="charts" id="message">
-          {" "}
-          Loading Data for the first time. This might take a while!{" "}
+          Loading Data for the first time. This might take a while!
         </div>
       )}
       {data && (
@@ -145,7 +138,6 @@ const App = () => {
           dataAPI={data.results}
           chart={chart}
           average={average}
-          loading={loading}
         />
       )}
     </div>
