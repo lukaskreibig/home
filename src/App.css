@@ -27,3 +27,8 @@
 .dropdown {
   flex: 1
 }
+
+.plotly {
+  width: 100%;
+  height: 100%;
+}

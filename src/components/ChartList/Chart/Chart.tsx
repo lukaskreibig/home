@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import Plot from "react-plotly.js";
 import { animated, useSpring } from "react-spring";
+import "../../../App.css";
 
 type Props = {
   refineData: any;
@@ -8,22 +9,12 @@ type Props = {
   chart: number;
   dataAPI: any;
 };
-const Chart: React.FC<Props> = ({
-  refineData,
-  dataPoints,
-  chart,
-  dataAPI,
-}) => {
-  console.log("refineData",refineData)
-  console.log("dataPoints",dataPoints)
-  console.log("chart",chart)
-  console.log("dataAPI",dataAPI)
-
+const Chart: React.FC<Props> = ({ refineData, dataPoints, chart, dataAPI }) => {
   let parameter = [
     { name: "PM 10 µg/m³", value: "pm10" },
     { name: "PM 2.5 µg/m³", value: "pm25" },
   ];
-  let color = ["#e9c46a", "#2a9d8f", "#f4a261", "#e63946", "#e76f51"];
+  let color = ["#e9c46a", "#2a9d8f"];
 
   let dataSettings = parameter.map((para: any, index: number) => {
     return {
@@ -74,8 +65,9 @@ const Chart: React.FC<Props> = ({
   let layout: any =
     chart === 2
       ? {
+          useResizeHandler: true,
           width: 1400,
-          height: 550,
+          height: 600,
           title: `Air Pollution Data - Average of ${refineData.reduce(
             (partialSum: any, a: any) => partialSum + a.measurement_count,
             0
@@ -89,10 +81,12 @@ const Chart: React.FC<Props> = ({
         }
       : {
           width: 1400,
-          height: 550,
+          height: 600,
           title: `Air Pollution - Showing the ${
             chart === 1 ? "Average" : "Latest"
-          } Data from ${dataPoints} Stations ${
+          } Data from ${dataPoints} ${
+            dataPoints === 1 ? "Station" : "Stations"
+          } ${
             chart === 1
               ? `using ${dataAPI.reduce(
                   (partialSum: any, a: any) => partialSum + a.measurements,
@@ -133,7 +127,6 @@ const Chart: React.FC<Props> = ({
       config: { mass: 1, tension: 280, friction: 60 },
     });
   }, [data, api]);
-  
 
   return (
     <animated.div style={style}>

@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 
-const App = () => {
+const App: React.FC = () => {
   const [data, setData] = useState<data | null>(null);
   const [average, setAverage] = useState<any>(null);
   const [countriesList, setCountriesList] = useState<countries | null>(null);
@@ -25,8 +25,8 @@ const App = () => {
     const getData = async (): Promise<void> => {
       try {
         setLoading(true);
-        const [averageFetch, airqualityFetch, countriesFetch] =
-          await Promise.all([
+        const [averageFetch, locationFetch, countriesFetch] = await Promise.all(
+          [
             fetch(
               `https://u50g7n0cbj.execute-api.us-east-1.amazonaws.com/v2/averages?parameter=pm10&parameter=pm25&parameter=um010&parameter=pm1&parameter=um025&country=${country}&date_from=${
                 new Date(Date.now() - 1).toISOString().split(".")[0]
@@ -40,14 +40,21 @@ const App = () => {
             fetch(
               `https://u50g7n0cbj.execute-api.us-east-1.amazonaws.com/v2/countries`
             ),
-          ]);
-        if (!airqualityFetch.ok || !countriesFetch.ok || !averageFetch.ok) {
+          ]
+        );
+        if (!locationFetch.ok || !countriesFetch.ok || !averageFetch.ok) {
           setLoading(false);
           throw new Error(
-            `Oh No! A failure occured fetching ${!airqualityFetch.ok ? `Location Data ${airqualityFetch.status}` : !countriesFetch.ok ? `Country Data: ${countriesFetch.status}` : `Average Data: ${averageFetch.status}`}`
+            `Oh No! A failure occured fetching ${
+              !locationFetch.ok
+                ? `Location Data ${locationFetch.status}`
+                : !countriesFetch.ok
+                ? `Country Data: ${countriesFetch.status}`
+                : `Average Data: ${averageFetch.status}`
+            }`
           );
         }
-        let airQualityData: data = await airqualityFetch.json();
+        let airQualityData: data = await locationFetch.json();
         let averageData = await averageFetch.json();
         let countriesData = await countriesFetch.json();
         setAverage(averageData);
@@ -63,6 +70,10 @@ const App = () => {
     };
     getData();
   }, [dateRange, country]);
+
+  console.log("data", data);
+  console.log("average", average);
+  console.log("countriesList", countriesList);
 
   const handleSelect = (event: SelectChangeEvent) => {
     if (event.target.name === "Country") {
@@ -134,11 +145,7 @@ const App = () => {
         </div>
       )}
       {data && (
-        <ChartList
-          dataAPI={data.results}
-          chart={chart}
-          average={average}
-        />
+        <ChartList dataAPI={data.results} chart={chart} average={average} />
       )}
     </div>
   );
