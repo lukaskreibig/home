@@ -1,4 +1,4 @@
-import Chart from "./Chart";
+import Chart from './Chart/Chart'
 
 type Props = {
   dataAPI: any;
@@ -9,9 +9,6 @@ type Props = {
 const ChartList: React.FC<Props> = ({ dataAPI, chart, average }) => {
 
   const dataPoints = dataAPI.length;
-
-  console.log("dataAPI",dataAPI)
-  console.log("average",average)
 
   return !average.results.length || !dataPoints ? (
     <div className="charts" id="message">

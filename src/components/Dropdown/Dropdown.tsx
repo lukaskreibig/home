@@ -6,7 +6,7 @@ import Select from "@mui/material/Select";
 
 type Props = {
   handleSelect: any;
-  dataValue: any;
+  dataValue: number | string;
   dropdown: string;
   countries?: any;
 };

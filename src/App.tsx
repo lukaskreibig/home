@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import ChartList from "./components/ChartList";
-import Dropdown from "./components/Dropdown";
+import ChartList from "./components/ChartList/ChartList";
+import Dropdown from "./components/Dropdown/Dropdown";
 import { SelectChangeEvent, LinearProgress } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -44,7 +44,7 @@ const App = () => {
         if (!airqualityFetch.ok || !countriesFetch.ok || !averageFetch.ok) {
           setLoading(false);
           throw new Error(
-            `Oh No! HTTP error: Status ${averageFetch.status}. Probably too much Data is being loaded. Try a shorter time span.`
+            `Oh No! A failure occured fetching ${!airqualityFetch.ok ? `Location Data ${airqualityFetch.status}` : !countriesFetch.ok ? `Country Data: ${countriesFetch.status}` : `Average Data: ${averageFetch.status}`}`
           );
         }
         let airQualityData: data = await airqualityFetch.json();

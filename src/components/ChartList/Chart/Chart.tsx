@@ -14,6 +14,11 @@ const Chart: React.FC<Props> = ({
   chart,
   dataAPI,
 }) => {
+  console.log("refineData",refineData)
+  console.log("dataPoints",dataPoints)
+  console.log("chart",chart)
+  console.log("dataAPI",dataAPI)
+
   let parameter = [
     { name: "PM 10 µg/m³", value: "pm10" },
     { name: "PM 2.5 µg/m³", value: "pm25" },
@@ -124,7 +129,7 @@ const Chart: React.FC<Props> = ({
     api.start({
       x: 0,
       y: 0,
-      delay: 100,
+      delay: 150,
       config: { mass: 1, tension: 280, friction: 60 },
     });
   }, [data, api]);
